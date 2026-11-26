@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Спецсистемсервис — Вариант 2 «Производство»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F1113; --bg-2:#16191C; --bg-3:#1E2226; --line:#2A2F35; --text:#F2F2EF; --muted:#9BA1A8;
+  --accent:#FF6B1A; --accent-2:#FF8A47;
+  --head:'Unbounded',sans-serif; --sans:'Onest',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.wrap{max-width:1320px;margin:0 auto;padding:0 32px}
+h1,h2,h3{font-family:var(--head);font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.eb{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.eb::before{content:"";width:22px;height:2px;background:var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 26px;border-radius:4px;font-weight:600;font-size:15px;transition:.2s;border:1.5px solid transparent;white-space:nowrap}
+.btn-a{background:var(--accent);color:#140800}
+.btn-a:hover{background:var(--accent-2)}
+.btn-l{border-color:#3A4047}
+.btn-l:hover{border-color:var(--text)}
+
+/* header */
+header.h{position:absolute;top:0;left:0;right:0;z-index:50;border-bottom:1px solid rgba(255,255,255,.08)}
+.h .wrap{display:flex;align-items:center;height:84px;gap:28px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--head);font-weight:700;font-size:15px;letter-spacing:0;flex-shrink:0}
+.logo i{width:40px;height:40px;border-radius:4px;background:var(--accent);display:grid;place-items:center;flex-shrink:0}
+.nav{display:flex;height:100%;margin-left:16px}
+.nav>li{list-style:none;position:relative;display:flex;align-items:center}
+.nav>li>a{padding:0 14px;font-size:15px;color:#D5D8DC;height:100%;display:flex;align-items:center;gap:6px}
+.nav>li:hover>a{color:#fff}
+.nav .car{width:7px;height:7px;border-right:1.5px solid;border-bottom:1.5px solid;transform:rotate(45deg) translateY(-3px);opacity:.6}
+.dd{position:absolute;top:100%;left:0;background:var(--bg-2);border:1px solid var(--line);border-radius:6px;padding:12px;min-width:270px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.18s;box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+.nav>li:hover .dd{opacity:1;visibility:visible;transform:none}
+.dd a{display:block;padding:9px 12px;border-radius:4px;font-size:14.5px;color:#C9CDD2}
+.dd a:hover{background:var(--bg-3);color:#fff}
+.mega{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:880px;left:-100px;padding:16px}
+.mega .mc{background:var(--bg-3);border-radius:6px;padding:14px}
+.mega .mc .mi{background:#fff;border-radius:4px;height:110px;display:grid;place-items:center;margin-bottom:12px}
+.mega .mc .mi img{height:100px;width:auto}
+.mega .mc b{display:block;font-size:14.5px;margin:0 0 6px 2px}
+.mega .mc a{padding:5px 2px;font-size:13.5px;color:var(--muted)}
+.mega .mc a:hover{background:none;color:var(--accent)}
+.hph{margin-left:auto;text-align:right;line-height:1.25;flex-shrink:0}
+.hph b{display:block;font-size:17px}
+.hph span{font-size:12.5px;color:var(--muted)}
+.burger{display:none;width:44px;height:44px;border:1.5px solid #3A4047;border-radius:4px;place-items:center;margin-left:auto}
+
+.drawer{position:fixed;inset:0;z-index:100;background:var(--bg);transform:translateX(100%);visibility:hidden;transition:.28s;display:flex;flex-direction:column;overflow-y:auto}
+.drawer.open{transform:none;visibility:visible}
+.drawer .dh{display:flex;align-items:center;justify-content:space-between;height:68px;padding:0 16px;border-bottom:1px solid var(--line);flex-shrink:0}
+.drawer details,.drawer nav>a{border-bottom:1px solid var(--line)}
+.drawer summary,.drawer nav>a{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:18px 16px;font-family:var(--head);font-size:16px;font-weight:500}
+.drawer summary::-webkit-details-marker{display:none}
+.drawer summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg);transition:.2s}
+.drawer details[open] summary::after{transform:rotate(-135deg)}
+.drawer details div{padding:0 0 12px}
+.drawer details a{display:block;padding:10px 16px 10px 28px;color:var(--muted)}
+.drawer .dc{padding:24px 16px;margin-top:auto;display:grid;gap:10px}
+.drawer .dc b{font-size:22px;font-family:var(--head)}
+
+/* hero */
+.hero{position:relative;min-height:820px;display:flex;align-items:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url(assets/hero.jpg) center 30%/cover}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,17,19,.96) 0%,rgba(15,17,19,.82) 45%,rgba(15,17,19,.35) 100%),linear-gradient(0deg,var(--bg) 0%,transparent 40%)}
+.hero .wrap{position:relative;width:100%;padding-top:150px;padding-bottom:56px}
+.hero h1{font-size:68px;max-width:860px;margin:24px 0 26px}
+.hero h1 span{color:var(--accent)}
+.hero .lead{font-size:19px;color:#CDD1D5;max-width:560px}
+.ctas{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+.hstats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:72px;border-top:1px solid rgba(255,255,255,.14)}
+.hstats div{padding:22px 24px 0 0}
+.hstats b{font-family:var(--head);font-size:30px;display:block;letter-spacing:-.02em}
+.hstats span{font-size:14px;color:var(--muted)}
+.partners-badge{position:absolute;right:32px;top:170px;background:rgba(22,25,28,.82);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:8px;padding:18px 20px;width:280px}
+.partners-badge small{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.partners-badge ul{list-style:none;margin-top:10px;display:grid;gap:8px}
+.partners-badge li{display:flex;justify-content:space-between;gap:10px;font-size:14px;border-top:1px solid var(--line);padding-top:8px}
+.partners-badge li b{font-weight:700}
+.partners-badge li span{color:var(--muted);text-align:right}
+
+/* sections */
+section.s{padding:110px 0}
+.hr{display:flex;justify-content:space-between;align-items:end;gap:32px;margin-bottom:44px}
+.hr h2{font-size:44px;margin-top:16px;max-width:760px}
+.hr p{color:var(--muted);max-width:400px}
+
+/* catalog */
+.tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.tab{height:42px;padding:0 18px;border-radius:40px;border:1px solid var(--line);color:#C9CDD2;font-size:14.5px;transition:.2s}
+.tab.on,.tab:hover{background:var(--text);color:var(--bg);border-color:var(--text)}
+.grid-p{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.pt{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:.25s}
+.pt:hover{border-color:var(--accent);transform:translateY(-3px)}
+.pt .im{background:#fff;height:220px;display:grid;place-items:center;position:relative}
+.pt .im img{height:200px;width:auto}
+.pt .code{position:absolute;left:12px;top:12px;background:var(--bg);color:#fff;font-family:var(--head);font-size:13px;padding:6px 10px;border-radius:4px}
+.pt .bd{padding:18px 20px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex:1}
+.pt h3{font-family:var(--sans);font-size:16px;font-weight:600;letter-spacing:0;line-height:1.3}
+.pt .go{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex-shrink:0;transition:.2s}
+.pt:hover .go{background:var(--accent);border-color:var(--accent);color:#140800}
+.pt.hide{display:none}
+.cat-foot{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:22px 26px;border:1px dashed #3A4047;border-radius:8px}
+.cat-foot b{font-size:17px}
+.cat-foot span{color:var(--muted);display:block;font-size:14.5px}
+
+/* services */
+.svc{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sv{position:relative;border-radius:8px;overflow:hidden;min-height:300px;display:flex;align-items:flex-end}
+.sv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.5s;filter:grayscale(.35)}
+.sv:hover img{transform:scale(1.05);filter:none}
+.sv::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,17,19,.15),rgba(15,17,19,.92) 75%)}
+.sv .sb{position:relative;z-index:1;padding:24px}
+.sv .num{font-family:var(--head);color:var(--accent);font-size:13px}
+.sv h3{font-size:21px;margin:8px 0 8px}
+.sv p{color:#BFC4C9;font-size:14.5px;max-width:330px}
+
+/* about */
+.about{display:grid;grid-template-columns:1.05fr .95fr;gap:72px;align-items:center}
+.about h2{font-size:44px;margin:16px 0 22px}
+.about p{color:#BFC4C9;margin-bottom:14px;font-size:16.5px}
+.ind{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 30px}
+.ind span{padding:9px 16px;border:1px solid var(--line);border-radius:40px;font-size:14px;color:#D5D8DC}
+.collage{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:240px 240px;gap:12px}
+.collage img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+.collage img:first-child{grid-row:span 2}
+.collage .q{background:var(--accent);color:#140800;border-radius:8px;padding:22px;display:flex;flex-direction:column;justify-content:flex-end}
+.collage .q b{font-family:var(--head);font-size:40px;line-height:1}
+.collage .q span{font-weight:600;margin-top:8px}
+
+/* projects */
+.pr-grid{display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:auto auto;gap:14px}
+.pr{position:relative;border-radius:8px;overflow:hidden;min-height:260px;display:flex;align-items:flex-end}
+.pr.big{grid-row:span 2;min-height:540px}
+.pr img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.5s}
+.pr:hover img{transform:scale(1.04)}
+.pr::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(15,17,19,.95))}
+.pr .pb{position:relative;z-index:1;padding:26px}
+.pr .chip{display:inline-block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:#140800;padding:5px 10px;border-radius:3px;font-weight:600}
+.pr h3{font-size:21px;margin-top:12px;line-height:1.25}
+.pr.big h3{font-size:28px}
+
+/* reviews */
+.rv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rv{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:26px;display:flex;flex-direction:column}
+.rv .qm{font-family:var(--head);font-size:56px;line-height:.6;color:var(--accent);height:30px}
+.rv p{font-size:16.5px;line-height:1.5;flex:1;margin:10px 0 22px}
+.rv .who{display:flex;gap:14px;align-items:center;padding-top:18px;border-top:1px solid var(--line)}
+.rv .who img{width:52px;height:72px;object-fit:cover;object-position:top;border-radius:3px;background:#fff;cursor:zoom-in;flex-shrink:0}
+.rv .who b{display:block;font-size:15px}
+.rv .who span{font-size:13px;color:var(--muted)}
+
+/* partners */
+.partners{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:56px}
+.pa{border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;grid-template-columns:76px 1fr;gap:14px;align-items:center;background:var(--bg-2);transition:.2s}
+.pa:hover{border-color:#4A5057}
+.pa img{width:76px;height:100px;object-fit:cover;object-position:top;border-radius:3px;background:#fff;cursor:zoom-in}
+.pa b{display:block;font-family:var(--head);font-size:15px;font-weight:500}
+.pa span{font-size:13px;color:var(--muted);line-height:1.4;display:block;margin-top:4px}
+
+/* blog */
+.bl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.bl{border-radius:8px;overflow:hidden;background:var(--bg-2);border:1px solid var(--line);transition:.2s}
+.bl:hover{border-color:#4A5057}
+.bl img{height:200px;width:100%;object-fit:cover}
+.bl .bb{padding:20px 22px 24px}
+.bl .mt{font-size:13px;color:var(--muted);display:flex;gap:14px}
+.bl h3{font-family:var(--sans);font-weight:600;letter-spacing:0;font-size:18px;line-height:1.35;margin-top:8px}
+
+/* cta */
+.cta-box{background:var(--text);color:var(--bg);border-radius:10px;padding:56px;display:grid;grid-template-columns:1fr 1fr;gap:56px;position:relative;overflow:hidden}
+.cta-box h2{font-size:40px;margin:16px 0 18px}
+.cta-box p{color:#4A4F55;font-size:17px}
+.cta-box .ct{margin-top:30px;display:grid;gap:4px}
+.cta-box .ct a{font-family:var(--head);font-size:21px;font-weight:500}
+form{display:grid;gap:12px}
+form input,form textarea{width:100%;height:54px;border-radius:4px;border:1.5px solid #D6D6D0;background:#fff;padding:0 16px;font:inherit;font-size:15.5px;outline:none;color:var(--bg)}
+form textarea{height:100px;padding:14px 16px;resize:vertical}
+form input:focus,form textarea:focus{border-color:var(--accent)}
+.file{display:flex;align-items:center;gap:12px;height:54px;padding:0 16px;border:1.5px dashed #B9B9B2;border-radius:4px;cursor:pointer;font-size:14.5px;color:#4A4F55}
+.file b{color:var(--bg)}
+.legal{font-size:12.5px;color:#7A7F85}
+
+footer{border-top:1px solid var(--line);padding:56px 0 32px;color:var(--muted);font-size:14.5px;margin-top:110px}
+.fg{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.3fr;gap:32px}
+footer h5{color:#fff;font-size:14px;margin-bottom:14px}
+footer li{list-style:none;padding:4px 0}
+footer a:hover{color:#fff}
+.fb{display:flex;justify-content:space-between;margin-top:44px;padding-top:22px;border-top:1px solid var(--line);font-size:13px;gap:16px;flex-wrap:wrap}
+
+.mbar{display:none}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;display:none;place-items:center;padding:24px;cursor:zoom-out}
+.lb.on{display:grid}
+.lb img{max-height:90vh;width:auto}
+
+/* responsive */
+@media (max-width:1200px){
+  .nav,.hph,.h .btn{display:none}
+  .burger{display:grid}
+  .partners-badge{display:none}
+  .grid-p{grid-template-columns:repeat(3,1fr)}
+  .partners{grid-template-columns:1fr 1fr}
+  .fg{grid-template-columns:1fr 1fr 1fr}
+}
+@media (max-width:900px){
+  .hero h1{font-size:48px}
+  .sv-grid{grid-template-columns:1fr 1fr}
+  .about,.cta-box{grid-template-columns:1fr;gap:40px}
+  .pr-grid{grid-template-columns:1fr 1fr}
+  .pr.big{grid-column:1/-1;grid-row:auto;min-height:380px}
+  .rv-grid,.bl-grid{grid-template-columns:1fr 1fr}
+  .cta-box{padding:40px}
+}
+@media (max-width:640px){
+  body{padding-bottom:64px}
+  .wrap{padding:0 16px}
+  .h .wrap{height:68px}
+  .logo{font-size:13px}
+  .logo i{width:36px;height:36px}
+  .hero{min-height:0}
+  .hero-bg{background-position:65% center}
+  .hero-bg::after{background:linear-gradient(180deg,rgba(15,17,19,.55) 0%,rgba(15,17,19,.88) 45%,var(--bg) 100%)}
+  .hero .wrap{padding-top:120px;padding-bottom:40px}
+  .hero h1{font-size:33px;margin:18px 0 18px}
+  .hero .lead{font-size:16.5px}
+  .ctas .btn{width:100%}
+  .hstats{grid-template-columns:1fr 1fr;margin-top:40px}
+  .hstats div{padding:16px 10px 4px 0}
+  .hstats b{font-size:22px}
+  .hstats span{font-size:13px}
+  section.s{padding:64px 0}
+  .hr{flex-direction:column;align-items:start;margin-bottom:28px;gap:14px}
+  .hr h2,.about h2,.cta-box h2{font-size:27px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px 18px;padding:0 16px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex-shrink:0}
+  .grid-p{grid-template-columns:1fr 1fr;gap:10px}
+  .pt .im{height:150px}.pt .im img{height:136px}
+  .pt .bd{padding:12px 12px 14px}
+  .pt h3{font-size:14px}
+  .pt .go{display:none}
+  .pt .code{font-size:11px;padding:4px 7px}
+  .cat-foot{padding:18px}
+  .cat-foot .btn{width:100%}
+  .scroller{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;gap:12px;margin:0 -16px;padding:0 16px 6px;scrollbar-width:none}
+  .scroller::-webkit-scrollbar{display:none}
+  .scroller>*{scroll-snap-align:start;flex:0 0 auto}
+  .sv-grid.scroller .sv{width:80%;min-height:280px}
+  .collage{grid-template-rows:170px 170px}
+  .collage .q b{font-size:30px}
+  .pr-grid.scroller .pr{width:84%;min-height:320px}
+  .pr.big h3,.pr h3{font-size:19px}
+  .rv-grid.scroller .rv{width:86%}
+  .partners{grid-template-columns:1fr;margin-top:36px}
+  .bl-grid.scroller .bl{width:78%}
+  .bl img{height:150px}
+  .cta-box{padding:26px 18px;border-radius:8px}
+  footer{margin-top:64px}
+  .fg{grid-template-columns:1fr 1fr;gap:24px}
+  .fg>div:first-child,.fg>div:last-child{grid-column:1/-1}
+  .mbar{display:grid;grid-template-columns:1fr 1.3fr;gap:8px;padding:8px;position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(15,17,19,.94);backdrop-filter:blur(8px);border-top:1px solid var(--line)}
+  .mbar a{height:48px;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:15px;border:1px solid #3A4047}
+  .mbar a+a{background:var(--accent);color:#140800;border-color:var(--accent)}
+}
+</style>
+</head>
+<body>
+
+<header class="h"><div class="wrap">
+  <a href="#" class="logo"><i><svg width="16" height="20" viewBox="0 0 18 22"><path d="M10 0 0 13h7l-2 9L18 8h-7l2-8z" fill="#140800"/></svg></i>СПЕЦСИСТЕМСЕРВИС</a>
+  <ul class="nav">
+    <li><a href="#">Продукция <i class="car"></i></a>
+      <div class="dd mega">
+        <div class="mc"><div class="mi"><img src="assets/c-upr.jpg" alt=""></div><b>Шкафы управления</b><a href="#">ЩУВ — вентиляция</a><a href="#">ШУН — насосы</a><a href="#">ШУ ИТП</a><a href="#">ЩУ КНС</a><a href="#">ЩУК/ШУП</a><a href="#">ШУ АСУТП</a></div>
+        <div class="mc"><div class="mi"><img src="assets/c-sil.jpg" alt=""></div><b>Силовые шкафы</b><a href="#">ВРУ</a><a href="#">АВР</a><a href="#">ЩАП</a><a href="#">Шкафы учёта</a><a href="#">ЩО</a><a href="#">ЯУ</a></div>
+        <div class="mc"><div class="mi"><img src="assets/c-pch.jpg" alt=""></div><b>Преобразователи частоты</b><a href="#">Danfoss</a><a href="#">INTEK</a><a href="#">Dastech</a></div>
+        <div class="mc"><div class="mi"><img src="assets/c-term.jpg" alt=""></div><b>Термошкафы</b><a href="#">С подогревом</a><a href="#">С подогревом и вентиляцией</a><a href="#">С вентиляцией</a></div>
+      </div>
+    </li>
+    <li><a href="#">Услуги <i class="car"></i></a>
+      <div class="dd"><a href="#">Проектирование</a><a href="#">Сборка шкафов управления</a><a href="#">Сборка силовых шкафов</a><a href="#">Программирование</a><a href="#">Монтажные работы</a><a href="#">Пусконаладочные работы</a><a href="#">Обслуживание</a></div></li>
+    <li><a href="#">О компании <i class="car"></i></a>
+      <div class="dd"><a href="#">О нас</a><a href="#">Реализованные объекты</a><a href="#">Отзывы</a><a href="#">Сертификаты</a><a href="#">Терминология</a><a href="#">Опросные листы</a></div></li>
+    <li><a href="#">Блог</a></li>
+    <li><a href="#">Контакты</a></li>
+  </ul>
+  <div class="hph"><b><a href="tel:+74991120131">+7 499 112-01-31</a></b><span>Пн–Пт 9:00–18:00</span></div>
+  <a href="#cta" class="btn btn-a" style="height:46px;padding:0 20px">Заявка на расчёт</a>
+  <button class="burger" aria-label="Меню" onclick="document.querySelector('.drawer').classList.add('open')"><svg width="18" height="12"><path d="M0 1h18M0 6h18M0 11h18" stroke="#F2F2EF" stroke-width="1.6"/></svg></button>
+</div></header>
+
+<aside class="drawer">
+  <div class="dh"><a href="#" class="logo"><i><svg width="16" height="20" viewBox="0 0 18 22"><path d="M10 0 0 13h7l-2 9L18 8h-7l2-8z" fill="#140800"/></svg></i>СПЕЦСИСТЕМСЕРВИС</a><button aria-label="Закрыть" style="font-size:30px;width:44px;height:44px" onclick="this.closest('.drawer').classList.remove('open')">×</button></div>
+  <nav>
+    <details><summary>Продукция</summary><div><a href="#">Шкафы управления</a><a href="#">Силовые шкафы</a><a href="#">Преобразователи частоты</a><a href="#">Термошкафы</a></div></details>
+    <details><summary>Услуги</summary><div><a href="#">Проектирование</a><a href="#">Сборка шкафов</a><a href="#">Программирование</a><a href="#">Монтаж</a><a href="#">Пусконаладка</a><a href="#">Обслуживание</a></div></details>
+    <details><summary>О компании</summary><div><a href="#">О нас</a><a href="#">Объекты</a><a href="#">Отзывы</a><a href="#">Сертификаты</a><a href="#">Опросные листы</a></div></details>
+    <a href="#">Блог</a><a href="#">Контакты</a>
+  </nav>
+  <div class="dc"><b>+7 499 112-01-31</b><span style="color:var(--muted)">+7 903 740-80-13 · info@sps-s.ru<br>Пн–Пт 9:00–18:00</span><a href="#cta" class="btn btn-a" onclick="this.closest('.drawer').classList.remove('open')">Заявка на расчёт</a></div>
+</aside>
+
+<section class="hero">
+  <div class="hero-bg" role="img" aria-label="Готовые шкафы на производстве"></div>
+  <div class="partners-badge"><small>Статусы производителей</small><ul><li><b>IEK</b><span>Сертифицированное производство</span></li><li><b>EKF</b><span>Прямой сборщик НКУ</span></li><li><b>Legrand</b><span>Партнёр до 1600 А</span></li><li><b>TDM</b><span>Дилер</span></li></ul></div>
+  <div class="wrap">
+    <span class="eb">Производство НКУ · с 2003 года</span>
+    <h1>Собственное производство <span>электрощитов</span> и шкафов управления</h1>
+    <p class="lead">Проектируем, собираем, программируем и запускаем — для промышленных предприятий, ЖКХ и инженерных систем зданий по всей России.</p>
+    <div class="ctas"><a href="#cta" class="btn btn-a">Рассчитать стоимость по схеме</a><a href="#catalog" class="btn btn-l">Каталог продукции</a></div>
+    <div class="hstats">
+      <div><b>23 года</b><span>на рынке электрощитового оборудования</span></div>
+      <div><b>2500 А</b><span>НКУ до 1000 В — сертификат IEK</span></div>
+      <div><b>24 мес.</b><span>гарантия со дня отгрузки</span></div>
+      <div><b>ТР ТС</b><span>004/2011 · ГОСТ Р · ПУЭ</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="catalog">
+  <div class="wrap">
+    <div class="hr"><div><span class="eb">Продукция</span><h2>Что мы производим</h2></div><a href="#" class="btn btn-l">Весь каталог →</a></div>
+    <div class="tabs">
+      <button class="tab on" data-f="all">Все</button><button class="tab" data-f="u">Шкафы управления</button><button class="tab" data-f="s">Силовые шкафы</button><button class="tab" data-f="o">ПЧ и термошкафы</button>
+    </div>
+    <div class="grid-p">
+      <a href="#" class="pt" data-c="u"><div class="im"><img src="assets/p-shuv.jpg" alt=""><span class="code">ЩУВ</span></div><div class="bd"><h3>Щиты управления вентиляцией</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt" data-c="u"><div class="im"><img src="assets/p-shun.jpg" alt=""><span class="code">ШУН</span></div><div class="bd"><h3>Шкафы управления насосами</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt" data-c="u"><div class="im"><img src="assets/p-itp.jpg" alt=""><span class="code">ШУ ИТП</span></div><div class="bd"><h3>Шкафы управления тепловыми пунктами</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt" data-c="u"><div class="im"><img src="assets/p-kns.jpg" alt=""><span class="code">ЩУ КНС</span></div><div class="bd"><h3>Щиты управления КНС</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt" data-c="u"><div class="im"><img src="assets/p-shuk.jpg" alt=""><span class="code">ЩУК ШУП</span></div><div class="bd"><h3>Конвейерные линии и печи полимеризации</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt" data-c="u"><div class="im"><img src="assets/p-asutp.jpg" alt=""><span class="code">ШУ АСУТП</span></div><div class="bd"><h3>АСУТП и диспетчеризация</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt" data-c="s"><div class="im"><img src="assets/p-vru.jpg" alt=""><span class="code">ВРУ</span></div><div class="bd"><h3>Вводно-распределительные устройства</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt" data-c="s"><div class="im"><img src="assets/p-avr.jpg" alt=""><span class="code">АВР</span></div><div class="bd"><h3>Щиты автоматического ввода резерва</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt hide" data-c="s" data-x><div class="im"><img src="assets/p-shap.jpg" alt=""><span class="code">ЩАП</span></div><div class="bd"><h3>Щиты автоматического переключения</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt hide" data-c="s" data-x><div class="im"><img src="assets/p-uchet.jpg" alt=""><span class="code">ШУ</span></div><div class="bd"><h3>Шкафы учёта электроэнергии</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt hide" data-c="s" data-x><div class="im"><img src="assets/p-sho.jpg" alt=""><span class="code">ЩО</span></div><div class="bd"><h3>Щиты освещения</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt hide" data-c="s" data-x><div class="im"><img src="assets/p-yau.jpg" alt=""><span class="code">ЯУ</span></div><div class="bd"><h3>Ящики управления электродвигателем</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt hide" data-c="o" data-x><div class="im"><img src="assets/p-danfoss.jpg" alt=""><span class="code">Danfoss</span></div><div class="bd"><h3>Преобразователи частоты Danfoss</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt hide" data-c="o" data-x><div class="im"><img src="assets/p-intek.jpg" alt=""><span class="code">INTEK</span></div><div class="bd"><h3>Преобразователи частоты INTEK</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt hide" data-c="o" data-x><div class="im"><img src="assets/p-term.jpg" alt=""><span class="code">ТШ</span></div><div class="bd"><h3>Термошкафы с подогревом</h3><span class="go">→</span></div></a>
+      <a href="#" class="pt hide" data-c="o" data-x><div class="im"><img src="assets/p-termv.jpg" alt=""><span class="code">ТШ</span></div><div class="bd"><h3>Термошкафы с подогревом и вентиляцией</h3><span class="go">→</span></div></a>
+    </div>
+    <div class="cat-foot"><div><b>Нет нужного изделия в каталоге?</b><span>Соберём любое НКУ по вашей схеме, ТЗ или опросному листу</span></div><a href="#cta" class="btn btn-a">Отправить схему</a></div>
+  </div>
+</section>
+
+<section class="s svc">
+  <div class="wrap">
+    <div class="hr"><div><span class="eb">Услуги</span><h2>Полный цикл без посредников</h2></div><p>Весь комплекс работ выполняем самостоятельно — это ускоряет проект и снижает итоговую стоимость.</p></div>
+    <div class="sv-grid scroller">
+      <a href="#" class="sv"><img src="assets/s-5.jpg" alt=""><div class="sb"><span class="num">01</span><h3>Проектирование</h3><p>Обследование объекта, ТЗ, принципиальные схемы, доработка проектов заказчика.</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-1.jpg" alt=""><div class="sb"><span class="num">02</span><h3>Сборка шкафов управления</h3><p>Автоматика вентиляции, дымоудаления, насосов, ИТП и АСУ ТП.</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-2.jpg" alt=""><div class="sb"><span class="num">03</span><h3>Сборка силовых шкафов</h3><p>ВРУ, ГРЩ, АВР — в собственном современном цехе.</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-4.jpg" alt=""><div class="sb"><span class="num">04</span><h3>Программирование</h3><p>Контроллеры Siemens, ОВЕН и других производителей.</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-3.jpg" alt=""><div class="sb"><span class="num">05</span><h3>Монтаж и пусконаладка</h3><p>Электромонтаж, запуск и сдача объекта в эксплуатацию.</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-6.jpg" alt=""><div class="sb"><span class="num">06</span><h3>Обслуживание</h3><p>Гарантийный и постгарантийный сервис, ремонт.</p></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="s">
+  <div class="wrap about">
+    <div>
+      <span class="eb">О компании</span>
+      <h2>23 года в производстве низковольтного оборудования</h2>
+      <p>«Спецсистемсервис» основан в 2003 году. Собственная производственная база с жёсткой системой контроля комплектующих и испытаний готовой продукции.</p>
+      <p>Изготавливаем как типовые НКУ, так и изделия по схемам заказчика. С поставщиками комплектующих действуют долгосрочные договорённости — закупаем по оптовым ценам.</p>
+      <div class="ind"><span>Пищевая</span><span>Химическая</span><span>Нефтяная</span><span>Машиностроение</span><span>Станкостроение</span><span>ТЭК</span><span>ЖКХ</span><span>Лаборатории</span></div>
+      <a href="#" class="btn btn-l">Подробнее о компании →</a>
+    </div>
+    <div class="collage">
+      <img src="assets/o-5.jpg" alt="Шкаф управления насосами">
+      <img src="assets/o-4.jpg" alt="Шкаф с преобразователями частоты">
+      <div class="q"><b>24 мес.</b><span>гарантии на всё оборудование</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding-top:0">
+  <div class="wrap">
+    <div class="hr"><div><span class="eb">Объекты</span><h2>Реализованные проекты</h2></div><a href="#" class="btn btn-l">Все объекты →</a></div>
+    <div class="pr-grid scroller">
+      <a href="#" class="pr big"><img src="assets/o-1.jpg" alt=""><div class="pb"><span class="chip">Пищевая промышленность</span><h3>Система управления для ввода растительных жиров в молоко</h3></div></a>
+      <a href="#" class="pr"><img src="assets/o-2.jpg" alt="" style="object-position:center 30%"><div class="pb"><span class="chip">Станкостроение</span><h3>Система управления для станка по изготовлению ручек из проволоки</h3></div></a>
+      <a href="#" class="pr"><img src="assets/o-3.jpg" alt=""><div class="pb"><span class="chip">ЖКХ</span><h3>Щит управления ИТП жилого дома</h3></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding-top:0">
+  <div class="wrap">
+    <div class="hr"><div><span class="eb">Отзывы</span><h2>Нам доверяют</h2></div><a href="#" class="btn btn-l">Все отзывы →</a></div>
+    <div class="rv-grid scroller">
+      <div class="rv"><div class="qm">“</div><p>Объект был сдан своевременно. Сроки ни разу не отодвигались. Стоимость услуг не завышалась.</p><div class="who"><img src="assets/r-3.jpg" alt="" data-lb><div><b>ООО «Преобразователь», Казань</b><span>ВРУ 630 А, АВР 630 А, ШУН-ЧРП, ШУ ИТП · 2022</span></div></div></div>
+      <div class="rv"><div class="qm">“</div><p>Сотрудничаем с октября 2013 года: 6 крупных и более 20 мелких заказов. Отмечаем качество ГРЩ с АВР и ВРУ.</p><div class="who"><img src="assets/r-2.jpg" alt="" data-lb><div><b>ТПК «Велес-Групп», Москва</b><span>Электрощиты для жилых домов · 2020</span></div></div></div>
+      <div class="rv"><div class="qm">“</div><p>Выбрали «Спецсистемсервис», потому что здесь оптовые цены, без накрутки. Таких поставщиков у нас попросту нет.</p><div class="who"><img src="assets/r-1.jpg" alt="" data-lb><div><b>ООО «Миладан», Липецкая обл.</b><span>Поставка УЭРМ · 2021</span></div></div></div>
+    </div>
+    <div class="partners">
+      <div class="pa"><img src="assets/cert-1.jpg" alt="" data-lb><div><b>IEK GROUP</b><span>Сертифицированное сборочное производство до 1000 В, до 2500 А</span></div></div>
+      <div class="pa"><img src="assets/cert-4.jpg" alt="" data-lb><div><b>EKF</b><span>Сертификат прямого сборщика НКУ</span></div></div>
+      <div class="pa"><img src="assets/cert-2.jpg" alt="" data-lb style="object-position:left"><div><b>Legrand</b><span>Партнёр по проектированию и производству НКУ до 1600 А</span></div></div>
+      <div class="pa"><img src="assets/cert-3.jpg" alt="" data-lb><div><b>TDM Electric</b><span>Официальный дилер компании</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding-top:0">
+  <div class="wrap">
+    <div class="hr"><div><span class="eb">Блог</span><h2>Статьи и инструкции</h2></div><a href="#" class="btn btn-l">Все статьи →</a></div>
+    <div class="bl-grid scroller">
+      <a href="#" class="bl"><img src="assets/b-1.png" alt=""><div class="bb"><div class="mt"><span>26 января</span><span>4 625 просмотров</span></div><h3>Программное обеспечение MCT10: настройка Danfoss VLT Micro Drive FC-051</h3></div></a>
+      <a href="#" class="bl"><img src="assets/b-2.jpg" alt=""><div class="bb"><div class="mt"><span>26 января</span><span>4 182 просмотра</span></div><h3>О шкафах управления: зачем производству автоматизация</h3></div></a>
+      <a href="#" class="bl"><img src="assets/b-3.jpg" alt=""><div class="bb"><div class="mt"><span>27 декабря</span><span>4 140 просмотров</span></div><h3>Автоматическое регулирование подачи воды в башне</h3></div></a>
+    </div>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="wrap">
+    <div class="cta-box">
+      <div>
+        <span class="eb">Заявка</span>
+        <h2>Расчёт стоимости по вашей схеме</h2>
+        <p>Пришлите схему, ТЗ или опросный лист. Специалисты составят эскиз, перечень комплектующих и рассчитают цену и сроки. Работаем с юридическими и физическими лицами.</p>
+        <div class="ct"><a href="tel:+74991120131">+7 499 112-01-31</a><a href="tel:+79037408013">+7 903 740-80-13</a><a href="mailto:info@sps-s.ru" style="font-family:var(--sans);font-size:16px;color:#4A4F55">info@sps-s.ru</a></div>
+      </div>
+      <form onsubmit="event.preventDefault();this.querySelector('button').textContent='Спасибо! Мы свяжемся с вами'">
+        <input placeholder="Имя"><input placeholder="Телефон или e-mail">
+        <textarea placeholder="Опишите задачу: тип щита, мощность, объект"></textarea>
+        <label class="file"><svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="#0F1113" stroke-width="1.6"><path d="M19 10.5 11 18.5a5 5 0 0 1-7-7l8-8a3.3 3.3 0 0 1 4.7 4.7l-8 8a1.7 1.7 0 0 1-2.4-2.4L13 7"/></svg><span><b>Прикрепить файл</b> — схема, ТЗ, опросный лист</span><input type="file" hidden></label>
+        <button class="btn btn-a" type="submit">Отправить на расчёт</button>
+        <p class="legal">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fg">
+      <div><a href="#" class="logo"><i><svg width="16" height="20" viewBox="0 0 18 22"><path d="M10 0 0 13h7l-2 9L18 8h-7l2-8z" fill="#140800"/></svg></i>СПЕЦСИСТЕМСЕРВИС</a><p style="margin-top:18px">Производственная электротехническая компания. Проектирование, сборка, монтаж электрощитов с 2003 года.</p></div>
+      <div><h5>Продукция</h5><ul><li><a href="#">Шкафы управления</a></li><li><a href="#">Силовые шкафы</a></li><li><a href="#">Преобразователи частоты</a></li><li><a href="#">Термошкафы</a></li></ul></div>
+      <div><h5>Услуги</h5><ul><li><a href="#">Проектирование</a></li><li><a href="#">Сборка</a></li><li><a href="#">Программирование</a></li><li><a href="#">Монтаж и ПНР</a></li><li><a href="#">Обслуживание</a></li></ul></div>
+      <div><h5>Компания</h5><ul><li><a href="#">О нас</a></li><li><a href="#">Объекты</a></li><li><a href="#">Отзывы</a></li><li><a href="#">Сертификаты</a></li><li><a href="#">Блог</a></li></ul></div>
+      <div><h5>Контакты</h5><p><a href="tel:+74991120131" style="color:#fff;font-size:18px;font-weight:600">+7 499 112-01-31</a><br><a href="tel:+79037408013">+7 903 740-80-13</a><br>info@sps-s.ru<br><br>МО, Красногорск, мкр. Опалиха, ул. Горького, 3 · Пн–Пт 9:00–18:00</p></div>
+    </div>
+    <div class="fb"><span>© 2003–2026 ООО «Спецсистемсервис»</span><span><a href="#">Карта сайта</a> · <a href="#">Политика конфиденциальности</a></span></div>
+  </div>
+</footer>
+
+<div class="mbar"><a href="tel:+74991120131">Позвонить</a><a href="#cta">Заявка на расчёт</a></div>
+<div class="lb" onclick="this.classList.remove('on')"><img alt=""></div>
+<script>
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  const f=t.dataset.f;
+  document.querySelectorAll('.pt').forEach(c=>c.classList.toggle('hide', f==='all' ? c.hasAttribute('data-x') : c.dataset.c!==f));
+}));
+document.querySelectorAll('[data-lb]').forEach(i=>i.addEventListener('click',e=>{e.preventDefault();const lb=document.querySelector('.lb');lb.querySelector('img').src=i.src;lb.classList.add('on')}));
+</script>
+</body>
+</html>

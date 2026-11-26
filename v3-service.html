@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Спецсистемсервис — Вариант 3 «Сервис»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6FA; --card:#fff; --text:#121826; --muted:#5B6478; --line:#E3E7EF;
+  --blue:#2457F5; --blue-d:#1A45D1; --blue-soft:#E8EEFF; --green:#16A36A; --r:20px;
+  --sans:'Manrope',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+h1,h2,h3{letter-spacing:-.025em;line-height:1.12;font-weight:800}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:40px;background:var(--blue-soft);color:var(--blue);font-weight:700;font-size:13.5px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 24px;border-radius:14px;font-weight:700;font-size:15px;transition:.2s;white-space:nowrap}
+.btn-b{background:var(--blue);color:#fff}
+.btn-b:hover{background:var(--blue-d)}
+.btn-s{background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn-s:hover{box-shadow:inset 0 0 0 1.5px var(--text)}
+
+/* header: 2 rows */
+.h1row{background:var(--card);border-bottom:1px solid var(--line)}
+.h1row .wrap{display:flex;align-items:center;gap:20px;height:76px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em;flex-shrink:0;line-height:1.1}
+.logo i{width:40px;height:40px;border-radius:12px;background:var(--blue);display:grid;place-items:center;flex-shrink:0}
+.logo small{display:block;font-size:11.5px;font-weight:500;color:var(--muted);letter-spacing:0}
+.catbtn{position:relative}
+.catbtn>button{height:46px;padding:0 18px;border-radius:12px;background:var(--blue);color:#fff;font-weight:700;display:flex;align-items:center;gap:10px}
+.mega{position:absolute;top:calc(100% + 12px);left:0;width:920px;background:var(--card);border-radius:20px;box-shadow:0 30px 70px -20px rgba(18,24,38,.3),0 0 0 1px var(--line);padding:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.18s;z-index:60}
+.catbtn:hover .mega,.catbtn:focus-within .mega{opacity:1;visibility:visible;transform:none}
+.catbtn::after{content:"";position:absolute;left:0;right:0;top:100%;height:14px}
+.mc{border-radius:14px;padding:12px;background:var(--bg)}
+.mc .mi{height:120px;background:#fff;border-radius:10px;display:grid;place-items:center;margin-bottom:10px}
+.mc .mi img{height:110px;width:auto}
+.mc b{display:block;margin:0 4px 6px;font-size:15px}
+.mc a{display:block;padding:4px;font-size:13.5px;color:var(--muted)}
+.mc a:hover{color:var(--blue)}
+.srch{flex:1;max-width:380px;height:46px;border-radius:12px;background:var(--bg);display:flex;align-items:center;gap:10px;padding:0 14px;color:var(--muted);font-size:14.5px}
+.hc{margin-left:auto;display:flex;align-items:center;gap:18px}
+.hc .ph{text-align:right;line-height:1.25}
+.hc .ph b{display:block;font-size:17px;font-weight:800}
+.hc .ph span{font-size:12.5px;color:var(--muted)}
+.ic-btn{width:46px;height:46px;border-radius:12px;background:var(--bg);display:grid;place-items:center;flex-shrink:0}
+.h2row{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+.h2row .wrap{display:flex;gap:4px;height:52px;align-items:center}
+.h2row a{padding:8px 14px;border-radius:10px;font-weight:600;font-size:14.5px;color:var(--muted)}
+.h2row a:hover{background:var(--bg);color:var(--text)}
+.h2row .r{margin-left:auto;color:var(--blue)}
+.burger{display:none}
+
+.drawer{position:fixed;inset:0;z-index:100;background:var(--bg);transform:translateX(100%);visibility:hidden;transition:.28s;display:flex;flex-direction:column;overflow-y:auto}
+.drawer.open{transform:none;visibility:visible}
+.drawer .dh{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 16px;background:var(--card);border-bottom:1px solid var(--line);flex-shrink:0}
+.drawer nav{padding:12px;display:grid;gap:8px}
+.drawer details,.drawer nav>a{background:var(--card);border-radius:14px}
+.drawer summary,.drawer nav>a{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:16px;font-weight:700;font-size:16.5px}
+.drawer summary::-webkit-details-marker{display:none}
+.drawer summary::after{content:"+";width:28px;height:28px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:600}
+.drawer details[open] summary::after{content:"–"}
+.drawer details div{padding:0 8px 10px}
+.drawer details a{display:flex;align-items:center;gap:12px;padding:8px;border-radius:10px;color:var(--muted);font-weight:500}
+.drawer details a img{width:44px;height:44px;object-fit:contain;background:#fff;border-radius:8px;border:1px solid var(--line)}
+.drawer .dc{padding:16px;margin-top:auto;display:grid;gap:10px}
+.drawer .dc b{font-size:21px}
+
+/* hero */
+.hero{padding:36px 0 0}
+.hero-box{background:var(--card);border-radius:32px;padding:48px;display:grid;grid-template-columns:1fr 460px;gap:40px;align-items:center;box-shadow:0 0 0 1px var(--line);position:relative;overflow:hidden}
+.hero-box::before{content:"";position:absolute;right:-80px;top:-60px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,var(--blue-soft),transparent 70%)}
+.hero-box>*{position:relative}
+.hero h1{font-size:50px;margin:18px 0 18px}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero .lead{font-size:18px;color:var(--muted);max-width:520px}
+.checks{display:grid;gap:10px;margin-top:26px}
+.checks div{display:flex;align-items:center;gap:12px;font-weight:600;font-size:15.5px}
+.checks i{width:26px;height:26px;border-radius:50%;background:#DDF5EA;display:grid;place-items:center;flex-shrink:0}
+.hero-imgs{display:flex;gap:10px;margin-top:30px}
+.hero-imgs img{width:92px;height:92px;object-fit:contain;background:var(--bg);border-radius:14px;padding:6px}
+.hero-imgs span{display:grid;place-items:center;width:92px;height:92px;border-radius:14px;background:var(--text);color:#fff;font-weight:800;font-size:14px;text-align:center;line-height:1.2}
+/* quiz */
+.quiz{background:var(--card);border-radius:24px;padding:26px;box-shadow:0 30px 60px -30px rgba(18,24,38,.25),0 0 0 1px var(--line)}
+.q-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12.5px;font-weight:800;letter-spacing:.03em}
+.bar{height:6px;background:var(--bg);border-radius:6px;overflow:hidden;margin-bottom:20px}
+.bar i{display:block;height:100%;width:33%;background:var(--blue);border-radius:6px;transition:.35s}
+.quiz h3{font-size:21px;margin-bottom:16px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{text-align:left;padding:12px;border-radius:14px;background:var(--bg);border:1.5px solid transparent;transition:.18s;display:flex;gap:10px;align-items:center;font-size:14px;font-weight:700;line-height:1.25}
+.opt small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:2px}
+.opt img{width:44px;height:44px;object-fit:contain;background:#fff;border-radius:10px;flex-shrink:0}
+.opt .ic{width:44px;height:44px;border-radius:10px;background:#fff;display:grid;place-items:center;flex-shrink:0;font-size:19px}
+.opt:hover{border-color:#C9D4F5}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.step{display:none}
+.step.on{display:block;animation:in .3s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.q-nav{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.q-back{color:var(--muted);font-weight:700;font-size:14.5px}
+.fields{display:grid;gap:8px}
+.fields input{height:50px;border-radius:12px;border:1.5px solid var(--line);padding:0 14px;font:inherit;font-size:15px;outline:none;background:var(--bg)}
+.fields input:focus{border-color:var(--blue);background:#fff}
+.attach{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:1.5px dashed #C3CBDB;cursor:pointer;font-size:14px;color:var(--muted)}
+.attach b{color:var(--text)}
+.done{text-align:center;padding:24px 6px}
+.done i{width:60px;height:60px;border-radius:50%;background:#DDF5EA;display:grid;place-items:center;margin:0 auto 16px}
+
+/* cats strip */
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+.cat{background:var(--card);border-radius:var(--r);padding:18px 18px 18px 22px;box-shadow:0 0 0 1px var(--line);display:flex;align-items:center;gap:12px;justify-content:space-between;transition:.2s;min-height:130px}
+.cat:hover{box-shadow:0 0 0 1.5px var(--blue),0 16px 30px -20px rgba(36,87,245,.5)}
+.cat b{display:block;font-size:17px;line-height:1.25}
+.cat span{font-size:13.5px;color:var(--muted)}
+.cat img{width:84px;height:110px;object-fit:contain;flex-shrink:0}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+.stat{border-radius:var(--r);padding:22px 22px;background:var(--text);color:#fff}
+.stat b{font-size:30px;font-weight:800;letter-spacing:-.03em;display:block;line-height:1.1}
+.stat span{color:#A9B1C3;font-size:14px}
+.stat:nth-child(2){background:var(--blue)}
+.stat:nth-child(2) span{color:#D5DFFF}
+
+section.s{padding:96px 0}
+.sh{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:36px}
+.sh h2{font-size:40px;margin-top:14px}
+.sh p{color:var(--muted);max-width:420px}
+
+/* catalog tabs */
+.ctabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.ctab{height:44px;padding:0 18px;border-radius:12px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:700;font-size:14.5px;color:var(--muted);transition:.2s}
+.ctab.on{background:var(--text);color:#fff;box-shadow:none}
+.cpanel{display:none;grid-template-columns:repeat(6,1fr);gap:12px}
+.cpanel.on{display:grid;animation:in .3s ease}
+.prod{background:var(--card);border-radius:18px;padding:12px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;transition:.2s}
+.prod:hover{box-shadow:0 0 0 1.5px var(--blue),0 16px 30px -20px rgba(36,87,245,.5)}
+.prod .pi{aspect-ratio:1/1.05;display:grid;place-items:center;background:#fff;border-radius:12px}
+.prod .pi img{max-height:96%;width:auto}
+.prod .code{display:inline-block;margin:10px 4px 4px;font-size:12px;font-weight:800;color:var(--blue);background:var(--blue-soft);padding:3px 8px;border-radius:6px;align-self:flex-start}
+.prod h4{font-size:14px;line-height:1.3;margin:0 4px 10px;flex:1}
+.prod .req{margin:0 4px 4px;height:38px;border-radius:10px;background:var(--bg);display:grid;place-items:center;font-size:13.5px;font-weight:700}
+.prod:hover .req{background:var(--blue);color:#fff}
+
+/* services */
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sv{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:0 0 0 1px var(--line);transition:.2s;display:flex;flex-direction:column}
+.sv:hover{transform:translateY(-3px)}
+.sv img{height:180px;width:100%;object-fit:cover}
+.sv .sb{padding:20px 22px 22px}
+.sv h3{font-size:19px;margin-bottom:6px}
+.sv p{color:var(--muted);font-size:14.5px}
+
+/* process */
+.proc{background:var(--card);border-radius:28px;padding:40px;box-shadow:0 0 0 1px var(--line);display:grid;grid-template-columns:repeat(5,1fr);gap:22px}
+.ps b{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--blue-soft);color:var(--blue);font-weight:800;margin-bottom:14px}
+.ps h4{font-size:16px;margin-bottom:6px}
+.ps p{font-size:14px;color:var(--muted)}
+
+/* objects */
+.objs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ob{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:0 0 0 1px var(--line);transition:.2s}
+.ob:hover{box-shadow:0 0 0 1.5px var(--text)}
+.ob img{height:230px;width:100%;object-fit:cover}
+.ob .obb{padding:18px 22px 22px}
+.ob .tag{font-size:12.5px;font-weight:800;color:var(--blue)}
+.ob h3{font-size:18px;margin-top:6px;line-height:1.3}
+
+/* reviews */
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rv{background:var(--card);border-radius:var(--r);padding:24px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column}
+.rv .stars{color:#F5A524;letter-spacing:2px;font-size:15px}
+.rv p{font-size:15.5px;margin:12px 0 20px;flex:1}
+.rv .who{display:flex;gap:12px;align-items:center}
+.rv .who img{width:48px;height:64px;object-fit:cover;object-position:top;border-radius:6px;box-shadow:0 0 0 1px var(--line);cursor:zoom-in;flex-shrink:0}
+.rv .who b{display:block;font-size:15px}
+.rv .who span{font-size:13px;color:var(--muted)}
+.certs{display:grid;grid-template-columns:1.1fr repeat(4,1fr);gap:14px;margin-top:14px}
+.certs .lead{background:var(--text);color:#fff;border-radius:var(--r);padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+.certs .lead b{font-size:22px;line-height:1.2;font-weight:800}
+.certs .lead span{color:#A9B1C3;font-size:14px}
+.ce{background:var(--card);border-radius:var(--r);padding:14px;box-shadow:0 0 0 1px var(--line)}
+.ce .cimg{height:150px;display:grid;place-items:center;background:var(--bg);border-radius:12px;overflow:hidden}
+.ce .cimg img{max-height:140px;width:auto;cursor:zoom-in;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.ce b{display:block;font-size:14.5px;margin:10px 4px 2px}
+.ce span{display:block;font-size:12.5px;color:var(--muted);margin:0 4px;line-height:1.4}
+
+/* blog */
+.blog{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.bl{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+.bl img{height:180px;width:100%;object-fit:cover}
+.bl .bb{padding:18px 22px 22px}
+.bl .mt{font-size:13px;color:var(--muted);display:flex;gap:12px}
+.bl h3{font-size:17.5px;line-height:1.35;margin-top:6px}
+
+/* faq */
+.faq-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px}
+.faq{display:grid;gap:10px}
+details.f{background:var(--card);border-radius:16px;padding:18px 22px;box-shadow:0 0 0 1px var(--line)}
+details.f summary{list-style:none;cursor:pointer;font-weight:700;font-size:16.5px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+details.f summary::-webkit-details-marker{display:none}
+details.f summary::after{content:"+";width:28px;height:28px;border-radius:50%;background:var(--bg);display:grid;place-items:center;flex-shrink:0;font-weight:600;transition:.2s}
+details.f[open] summary::after{transform:rotate(45deg)}
+details.f p{color:var(--muted);margin-top:10px;font-size:15px}
+
+/* contacts */
+.contact{display:grid;grid-template-columns:1fr 1.2fr;gap:14px}
+.c-card{background:var(--card);border-radius:28px;padding:36px;box-shadow:0 0 0 1px var(--line)}
+.c-card h2{font-size:34px;margin-bottom:20px}
+.c-row{display:flex;gap:14px;padding:13px 0;border-top:1px solid var(--line);align-items:center}
+.c-row .ic{width:42px;height:42px;border-radius:12px;background:var(--bg);display:grid;place-items:center;flex-shrink:0}
+.c-row small{display:block;color:var(--muted);font-size:12.5px}
+.c-row b{font-size:16.5px}
+.map{border-radius:28px;overflow:hidden;min-height:420px;background:#E7ECF4;position:relative;box-shadow:0 0 0 1px var(--line)}
+.map iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+footer{padding:56px 0 40px;margin-top:96px;background:var(--card);border-top:1px solid var(--line);font-size:14.5px;color:var(--muted)}
+.fg{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:32px}
+footer h5{color:var(--text);font-size:14.5px;margin-bottom:12px}
+footer li{list-style:none;padding:4px 0}
+footer a:hover{color:var(--blue)}
+.fb{display:flex;justify-content:space-between;margin-top:40px;padding-top:22px;border-top:1px solid var(--line);font-size:13px;gap:16px;flex-wrap:wrap}
+
+.mbar{display:none}
+.lb{position:fixed;inset:0;background:rgba(18,24,38,.85);z-index:200;display:none;place-items:center;padding:24px;cursor:zoom-out}
+.lb.on{display:grid}
+.lb img{max-height:90vh;width:auto;border-radius:6px}
+
+@media (max-width:1180px){
+  .srch,.hc .ph,.h2row,.catbtn{display:none}
+  .burger{display:grid;width:46px;height:46px;border-radius:12px;background:var(--text);place-items:center}
+  .hero-box{grid-template-columns:1fr;padding:36px}
+  .cpanel{grid-template-columns:repeat(3,1fr)}
+  .certs{grid-template-columns:repeat(4,1fr)}
+  .certs .lead{grid-column:1/-1}
+  .proc{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:900px){
+  .cats,.stats{grid-template-columns:1fr 1fr}
+  .svc,.objs,.revs,.blog{grid-template-columns:1fr 1fr}
+  .faq-wrap,.contact{grid-template-columns:1fr;gap:28px}
+  .fg{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  body{padding-bottom:72px}
+  .wrap{padding:0 16px}
+  .h1row .wrap{height:64px;gap:10px}
+  .logo{font-size:16px}.logo small{display:none}
+  .logo i{width:36px;height:36px;border-radius:10px}
+  .hc{gap:8px}
+  .hero{padding-top:16px}
+  .hero-box{padding:22px 18px;border-radius:24px;gap:24px}
+  .hero h1{font-size:31px;margin:14px 0 12px}
+  .hero .lead{font-size:16px}
+  .checks div{font-size:14.5px}
+  .hero-imgs{display:none}
+  .quiz{padding:18px 14px;border-radius:18px;box-shadow:0 0 0 1px var(--line)}
+  .quiz h3{font-size:19px}
+  .opts{grid-template-columns:1fr}
+  .cats{gap:10px}
+  .cat{flex-direction:column-reverse;align-items:flex-start;padding:14px;min-height:0;gap:6px}
+  .cat img{width:100%;height:110px}
+  .cat b{font-size:15px}
+  .cat span{font-size:12.5px}
+  .stats{gap:10px}
+  .stat{padding:16px}
+  .stat b{font-size:22px}
+  .stat span{font-size:12.5px}
+  section.s{padding:60px 0}
+  .sh{flex-direction:column;align-items:start;margin-bottom:24px;gap:12px}
+  .sh h2{font-size:28px}
+  .ctabs{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px 16px;padding:0 16px;scrollbar-width:none}
+  .ctabs::-webkit-scrollbar{display:none}
+  .ctab{flex-shrink:0}
+  .cpanel{grid-template-columns:1fr 1fr;gap:10px}
+  .scroller{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;gap:12px;margin:0 -16px;padding:0 16px 8px;scrollbar-width:none}
+  .scroller::-webkit-scrollbar{display:none}
+  .scroller>*{scroll-snap-align:start;flex:0 0 auto}
+  .svc.scroller .sv{width:78%}
+  .sv img{height:150px}
+  .proc{grid-template-columns:1fr;padding:22px;gap:16px}
+  .ps{display:grid;grid-template-columns:40px 1fr;column-gap:14px}
+  .ps b{grid-row:span 2;margin:0}
+  .objs.scroller .ob{width:82%}
+  .ob img{height:190px}
+  .revs.scroller .rv{width:86%}
+  .certs{grid-template-columns:1fr 1fr;gap:10px}
+  .ce .cimg{height:120px}.ce .cimg img{max-height:112px}
+  .blog.scroller .bl{width:78%}
+  .bl img{height:140px}
+  .c-card{padding:22px 18px}
+  .c-card h2{font-size:26px}
+  .map{min-height:300px}
+  footer{margin-top:60px}
+  .mbar{display:grid;grid-template-columns:52px 1fr;gap:8px;position:fixed;left:8px;right:8px;bottom:8px;z-index:60;padding:8px;background:var(--card);border-radius:18px;box-shadow:0 10px 30px -8px rgba(18,24,38,.35),0 0 0 1px var(--line)}
+  .mbar a{height:48px;border-radius:12px;display:grid;place-items:center;font-weight:700}
+  .mbar a:first-child{background:var(--bg)}
+  .mbar a+a{background:var(--blue);color:#fff}
+}
+</style>
+</head>
+<body>
+
+<div class="h1row"><div class="wrap">
+  <a href="#" class="logo"><i><svg width="15" height="19" viewBox="0 0 18 22"><path d="M10 0 0 13h7l-2 9L18 8h-7l2-8z" fill="#fff"/></svg></i><span>Спецсистемсервис<small>Электрощиты с 2003 года</small></span></a>
+  <div class="catbtn">
+    <button><svg width="16" height="16" viewBox="0 0 16 16" fill="#fff"><rect width="7" height="7" rx="2"/><rect x="9" width="7" height="7" rx="2"/><rect y="9" width="7" height="7" rx="2"/><rect x="9" y="9" width="7" height="7" rx="2"/></svg>Каталог</button>
+    <div class="mega">
+      <div class="mc"><a href="#" class="mi"><img src="assets/c-upr.jpg" alt=""></a><b>Шкафы управления</b><a href="#">ЩУВ — вентиляция</a><a href="#">ШУН — насосы</a><a href="#">ШУ ИТП</a><a href="#">ЩУ КНС</a><a href="#">ЩУК / ШУП</a><a href="#">ШУ АСУТП</a></div>
+      <div class="mc"><a href="#" class="mi"><img src="assets/c-sil.jpg" alt=""></a><b>Силовые шкафы</b><a href="#">ВРУ</a><a href="#">АВР</a><a href="#">ЩАП</a><a href="#">Шкафы учёта</a><a href="#">Щиты освещения</a><a href="#">ЯУ</a></div>
+      <div class="mc"><a href="#" class="mi"><img src="assets/c-pch.jpg" alt=""></a><b>Преобразователи частоты</b><a href="#">Danfoss</a><a href="#">INTEK</a><a href="#">Dastech</a></div>
+      <div class="mc"><a href="#" class="mi"><img src="assets/c-term.jpg" alt=""></a><b>Термошкафы</b><a href="#">С подогревом</a><a href="#">С подогревом и вентиляцией</a><a href="#">С вентиляцией</a></div>
+    </div>
+  </div>
+  <div class="srch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B6478" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Поиск: ВРУ, АВР, шкаф управления насосами…</div>
+  <div class="hc">
+    <div class="ph"><b><a href="tel:+74991120131">+7 499 112-01-31</a></b><span>Пн–Пт 9:00–18:00</span></div>
+    <a class="ic-btn" href="tel:+74991120131" aria-label="Позвонить"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121826" stroke-width="1.8"><path d="M5 3h4l2 5-3 2a11 11 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg></a>
+    <button class="burger" aria-label="Меню" onclick="document.querySelector('.drawer').classList.add('open')"><svg width="18" height="12"><path d="M0 1h18M0 6h18M0 11h18" stroke="#fff" stroke-width="1.8"/></svg></button>
+  </div>
+</div></div>
+<nav class="h2row"><div class="wrap">
+  <a href="#">Услуги</a><a href="#">Объекты</a><a href="#">О компании</a><a href="#">Отзывы</a><a href="#">Сертификаты</a><a href="#">Блог</a><a href="#">Опросные листы</a><a href="#">Контакты</a>
+  <a href="#quiz" class="r">Рассчитать стоимость →</a>
+</div></nav>
+
+<aside class="drawer">
+  <div class="dh"><a href="#" class="logo"><i><svg width="15" height="19" viewBox="0 0 18 22"><path d="M10 0 0 13h7l-2 9L18 8h-7l2-8z" fill="#fff"/></svg></i>Спецсистемсервис</a><button aria-label="Закрыть" class="ic-btn" style="font-size:26px" onclick="this.closest('.drawer').classList.remove('open')">×</button></div>
+  <nav>
+    <details open><summary>Каталог</summary><div><a href="#"><img src="assets/c-upr.jpg" alt="">Шкафы управления</a><a href="#"><img src="assets/c-sil.jpg" alt="">Силовые шкафы</a><a href="#"><img src="assets/c-pch.jpg" alt="">Преобразователи частоты</a><a href="#"><img src="assets/c-term.jpg" alt="">Термошкафы</a></div></details>
+    <details><summary>Услуги</summary><div><a href="#">Проектирование</a><a href="#">Сборка шкафов</a><a href="#">Программирование</a><a href="#">Монтаж</a><a href="#">Пусконаладка</a><a href="#">Обслуживание</a></div></details>
+    <details><summary>О компании</summary><div><a href="#">О нас</a><a href="#">Объекты</a><a href="#">Отзывы</a><a href="#">Сертификаты</a><a href="#">Опросные листы</a></div></details>
+    <a href="#">Блог</a><a href="#">Контакты</a>
+  </nav>
+  <div class="dc"><b>+7 499 112-01-31</b><span style="color:var(--muted)">+7 903 740-80-13 · info@sps-s.ru · Пн–Пт 9:00–18:00</span><a href="#quiz" class="btn btn-b" onclick="this.closest('.drawer').classList.remove('open')">Рассчитать стоимость</a></div>
+</aside>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-box">
+      <div>
+        <span class="pill">⚡ Производим НКУ с 2003 года</span>
+        <h1>Электрощиты и автоматика <em>под ключ</em> — от схемы до запуска</h1>
+        <p class="lead">Ответьте на 2 вопроса — специалисты подготовят эскизную схему, перечень комплектующих, цену и сроки изготовления.</p>
+        <div class="checks">
+          <div><i><svg width="12" height="12"><path d="M1 6l3.5 3.5L11 2" stroke="#16A36A" stroke-width="2" fill="none"/></svg></i>Собираем по вашей схеме или проектируем сами</div>
+          <div><i><svg width="12" height="12"><path d="M1 6l3.5 3.5L11 2" stroke="#16A36A" stroke-width="2" fill="none"/></svg></i>Гарантия 24 месяца со дня отгрузки</div>
+          <div><i><svg width="12" height="12"><path d="M1 6l3.5 3.5L11 2" stroke="#16A36A" stroke-width="2" fill="none"/></svg></i>Сертифицированный сборщик IEK, EKF, Legrand</div>
+        </div>
+        <div class="hero-imgs"><img src="assets/p-vru.jpg" alt=""><img src="assets/p-shun.jpg" alt=""><img src="assets/p-avr.jpg" alt=""><img src="assets/p-itp.jpg" alt=""><span>20+<br>типов</span></div>
+      </div>
+
+      <div class="quiz" id="quiz">
+        <div class="q-top"><span id="qlabel" style="color:var(--muted)">ШАГ 1 ИЗ 3</span><span style="color:var(--blue)">Расчёт бесплатно</span></div>
+        <div class="bar"><i id="qbar"></i></div>
+        <div class="step on" data-s="1">
+          <h3>Что вам нужно?</h3>
+          <div class="opts">
+            <button class="opt"><img src="assets/c-upr.jpg" alt=""><span>Шкаф управления<small>Насосы, вентиляция, ИТП</small></span></button>
+            <button class="opt"><img src="assets/c-sil.jpg" alt=""><span>Силовой щит<small>ВРУ, АВР, ЩО, учёт</small></span></button>
+            <button class="opt"><img src="assets/c-pch.jpg" alt=""><span>Преобразователь частоты<small>Подбор и настройка</small></span></button>
+            <button class="opt"><span class="ic">🛠</span><span>Проект под ключ<small>Проект, монтаж, ПНР</small></span></button>
+          </div>
+        </div>
+        <div class="step" data-s="2">
+          <h3>Есть схема или техническое задание?</h3>
+          <div class="opts">
+            <button class="opt"><span class="ic">📐</span><span>Да, есть схема<small>Соберём по документации</small></span></button>
+            <button class="opt"><span class="ic">📝</span><span>ТЗ / опросный лист<small>Разработаем схему</small></span></button>
+            <button class="opt"><span class="ic">💬</span><span>Только задача<small>Поможем сформулировать</small></span></button>
+            <button class="opt"><span class="ic">🔍</span><span>Нужно обследование<small>Выедем на объект</small></span></button>
+          </div>
+          <div class="q-nav"><button class="q-back">← Назад</button></div>
+        </div>
+        <div class="step" data-s="3">
+          <h3>Куда отправить расчёт?</h3>
+          <div class="fields">
+            <input placeholder="Ваше имя"><input placeholder="Телефон или e-mail">
+            <label class="attach"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#5B6478" stroke-width="1.6"><path d="M19 10.5 11 18.5a5 5 0 0 1-7-7l8-8a3.3 3.3 0 0 1 4.7 4.7l-8 8a1.7 1.7 0 0 1-2.4-2.4L13 7"/></svg><span><b>Прикрепить схему</b> · необязательно</span><input type="file" hidden></label>
+          </div>
+          <div class="q-nav"><button class="q-back">← Назад</button><button class="btn btn-b" id="qsend">Получить расчёт</button></div>
+        </div>
+        <div class="step" data-s="4"><div class="done"><i><svg width="28" height="28"><path d="M3 14l7 7L25 5" stroke="#16A36A" stroke-width="3" fill="none"/></svg></i><h3>Заявка принята</h3><p style="color:var(--muted)">Специалист свяжется с вами в рабочее время<br>Пн–Пт, 9:00–18:00</p></div></div>
+      </div>
+    </div>
+
+    <div class="cats">
+      <a href="#" class="cat"><div><b>Шкафы управления</b><span>ЩУВ, ШУН, ИТП, КНС, АСУТП</span></div><img src="assets/c-upr.jpg" alt=""></a>
+      <a href="#" class="cat"><div><b>Силовые шкафы</b><span>ВРУ, АВР, ЩАП, ЩО, ЯУ</span></div><img src="assets/c-sil.jpg" alt=""></a>
+      <a href="#" class="cat"><div><b>Преобразователи частоты</b><span>Danfoss, INTEK, Dastech</span></div><img src="assets/c-pch.jpg" alt=""></a>
+      <a href="#" class="cat"><div><b>Термошкафы</b><span>Подогрев и вентиляция</span></div><img src="assets/c-term.jpg" alt=""></a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>с 2003 года</b><span>производим электрощиты</span></div>
+      <div class="stat"><b>до 2500 А</b><span>НКУ до 1000 В — сертификат IEK</span></div>
+      <div class="stat"><b>24 месяца</b><span>гарантия со дня отгрузки</span></div>
+      <div class="stat"><b>Вся Россия</b><span>юр. и физ. лица, доставка ТК</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="s">
+  <div class="wrap">
+    <div class="sh"><div><span class="pill">Продукция</span><h2>Популярные изделия</h2></div><a href="#" class="btn btn-s">Весь каталог →</a></div>
+    <div class="ctabs">
+      <button class="ctab on" data-t="a">Шкафы управления</button><button class="ctab" data-t="b">Силовые шкафы</button><button class="ctab" data-t="c">ПЧ и термошкафы</button>
+    </div>
+    <div class="cpanel on" data-p="a">
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-shuv.jpg" alt=""></div><span class="code">ЩУВ</span><h4>Щиты управления вентиляцией</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-shun.jpg" alt=""></div><span class="code">ШУН</span><h4>Шкафы управления насосами</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-itp.jpg" alt=""></div><span class="code">ШУ ИТП</span><h4>Шкафы управления ИТП</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-kns.jpg" alt=""></div><span class="code">ЩУ КНС</span><h4>Щиты управления КНС</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-shuk.jpg" alt=""></div><span class="code">ЩУК ШУП</span><h4>Конвейеры и печи полимеризации</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-asutp.jpg" alt=""></div><span class="code">АСУТП</span><h4>АСУТП и диспетчеризация</h4><span class="req">Рассчитать</span></a>
+    </div>
+    <div class="cpanel" data-p="b">
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-vru.jpg" alt=""></div><span class="code">ВРУ</span><h4>Вводно-распределительные устройства</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-avr.jpg" alt=""></div><span class="code">АВР</span><h4>Автоматический ввод резерва</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-shap.jpg" alt=""></div><span class="code">ЩАП</span><h4>Щиты автоматического переключения</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-uchet.jpg" alt=""></div><span class="code">ШУ</span><h4>Шкафы учёта электроэнергии</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-sho.jpg" alt=""></div><span class="code">ЩО</span><h4>Щиты освещения</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-yau.jpg" alt=""></div><span class="code">ЯУ</span><h4>Ящики управления двигателем</h4><span class="req">Рассчитать</span></a>
+    </div>
+    <div class="cpanel" data-p="c">
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-danfoss.jpg" alt=""></div><span class="code">Danfoss</span><h4>Преобразователи частоты Danfoss</h4><span class="req">Подобрать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-intek.jpg" alt=""></div><span class="code">INTEK</span><h4>Преобразователи частоты INTEK</h4><span class="req">Подобрать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/o-4.jpg" alt="" style="object-fit:cover;width:100%;height:100%;border-radius:12px"></div><span class="code">ШУ с ПЧ</span><h4>Шкафы с преобразователями частоты</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-term.jpg" alt=""></div><span class="code">ТШ</span><h4>Термошкафы с подогревом</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/p-termv.jpg" alt=""></div><span class="code">ТШ</span><h4>С подогревом и вентиляцией</h4><span class="req">Рассчитать</span></a>
+      <a href="#" class="prod"><div class="pi"><img src="assets/c-term.jpg" alt=""></div><span class="code">ТШ</span><h4>Термошкафы с вентиляцией</h4><span class="req">Рассчитать</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding-top:0">
+  <div class="wrap">
+    <div class="sh"><div><span class="pill">Услуги</span><h2>Полный цикл в одних руках</h2></div><p>Весь комплекс работ выполняем сами, без посредников — это дополнительная экономия.</p></div>
+    <div class="svc scroller">
+      <a href="#" class="sv"><img src="assets/s-5.jpg" alt=""><div class="sb"><h3>Проектирование</h3><p>Обследование объекта, ТЗ, схемы, доработка проектов заказчика</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-1.jpg" alt=""><div class="sb"><h3>Сборка шкафов управления</h3><p>Вентиляция, дымоудаление, насосы, ИТП, АСУ ТП</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-2.jpg" alt=""><div class="sb"><h3>Сборка силовых шкафов</h3><p>Современный цех по производству ВРУ, ГРЩ, АВР</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-4.jpg" alt=""><div class="sb"><h3>Программирование</h3><p>Контроллеры Siemens, ОВЕН и других производителей</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-3.jpg" alt=""><div class="sb"><h3>Монтаж и пусконаладка</h3><p>Электромонтаж и сдача объекта в эксплуатацию</p></div></a>
+      <a href="#" class="sv"><img src="assets/s-6.jpg" alt=""><div class="sb"><h3>Обслуживание</h3><p>Гарантийный и постгарантийный сервис, ремонт</p></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding-top:0">
+  <div class="wrap">
+    <div class="sh"><div><span class="pill">Как мы работаем</span><h2>5 шагов до готового щита</h2></div></div>
+    <div class="proc">
+      <div class="ps"><b>1</b><h4>Заявка</h4><p>Присылаете схему, ТЗ или описание задачи</p></div>
+      <div class="ps"><b>2</b><h4>Расчёт</h4><p>Эскизная схема, перечень комплектующих, цена и срок</p></div>
+      <div class="ps"><b>3</b><h4>Счёт</h4><p>Согласовываем условия и выставляем счёт</p></div>
+      <div class="ps"><b>4</b><h4>Сборка</h4><p>Закупаем комплектующие по оптовым ценам и собираем</p></div>
+      <div class="ps"><b>5</b><h4>Отгрузка</h4><p>Испытания и доставка ТК в ваш регион</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding-top:0">
+  <div class="wrap">
+    <div class="sh"><div><span class="pill">Объекты</span><h2>Реализованные проекты</h2></div><a href="#" class="btn btn-s">Все объекты →</a></div>
+    <div class="objs scroller">
+      <a href="#" class="ob"><img src="assets/o-1.jpg" alt=""><div class="obb"><span class="tag">Пищевая промышленность</span><h3>Система управления для ввода растительных жиров в молоко</h3></div></a>
+      <a href="#" class="ob"><img src="assets/o-2.jpg" alt="" style="object-position:center 30%"><div class="obb"><span class="tag">Станкостроение</span><h3>Система управления для станка по изготовлению ручек из проволоки</h3></div></a>
+      <a href="#" class="ob"><img src="assets/o-3.jpg" alt=""><div class="obb"><span class="tag">ЖКХ</span><h3>Щит управления ИТП жилого дома</h3></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding-top:0">
+  <div class="wrap">
+    <div class="sh"><div><span class="pill">Отзывы</span><h2>Благодарственные письма</h2></div><a href="#" class="btn btn-s">Все отзывы →</a></div>
+    <div class="revs scroller">
+      <div class="rv"><span class="stars">★★★★★</span><p>«Объект был сдан своевременно. Сроки ни разу не отодвигались. Стоимость услуг не завышалась. Если потребуются услуги по сборке — обратимся именно к вам».</p><div class="who"><img src="assets/r-3.jpg" alt="" data-lb><div><b>ООО «Преобразователь»</b><span>Казань · ВРУ, АВР, ШУН-ЧРП, ШУ ИТП</span></div></div></div>
+      <div class="rv"><span class="stars">★★★★★</span><p>«Сотрудничаем с октября 2013 года — 6 крупных и более 20 мелких заказов. Все характеристики соответствуют заявленным».</p><div class="who"><img src="assets/r-2.jpg" alt="" data-lb><div><b>ТПК «Велес-Групп»</b><span>Москва · ГРЩ с АВР, ВРУ</span></div></div></div>
+      <div class="rv"><span class="stars">★★★★★</span><p>«Выбрали именно „Спецсистемсервис“, потому что здесь для покупателя оптовые цены, без накрутки».</p><div class="who"><img src="assets/r-1.jpg" alt="" data-lb><div><b>ООО «Миладан»</b><span>Липецкая обл. · УЭРМ</span></div></div></div>
+    </div>
+    <div class="certs">
+      <div class="lead"><b>Сертифицированный сборщик НКУ</b><span>Статусы подтверждены производителями комплектующих. Продукция соответствует ТР ТС 004/2011.</span></div>
+      <div class="ce"><div class="cimg"><img src="assets/cert-1.jpg" alt="" data-lb></div><b>IEK GROUP</b><span>Сборочное производство до 2500 А</span></div>
+      <div class="ce"><div class="cimg"><img src="assets/cert-4.jpg" alt="" data-lb></div><b>EKF</b><span>Прямой сборщик НКУ</span></div>
+      <div class="ce"><div class="cimg"><img src="assets/cert-2.jpg" alt="" data-lb></div><b>Legrand</b><span>Партнёр, НКУ до 1600 А</span></div>
+      <div class="ce"><div class="cimg"><img src="assets/cert-3.jpg" alt="" data-lb></div><b>TDM Electric</b><span>Официальный дилер</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding-top:0">
+  <div class="wrap">
+    <div class="sh"><div><span class="pill">Блог</span><h2>Полезные статьи</h2></div><a href="#" class="btn btn-s">Все статьи →</a></div>
+    <div class="blog scroller">
+      <a href="#" class="bl"><img src="assets/b-1.png" alt=""><div class="bb"><div class="mt"><span>26 января</span><span>4 625 просмотров</span></div><h3>Программное обеспечение MCT10: настройка Danfoss VLT Micro Drive</h3></div></a>
+      <a href="#" class="bl"><img src="assets/b-2.jpg" alt=""><div class="bb"><div class="mt"><span>26 января</span><span>4 182 просмотра</span></div><h3>О шкафах управления</h3></div></a>
+      <a href="#" class="bl"><img src="assets/b-3.jpg" alt=""><div class="bb"><div class="mt"><span>27 декабря</span><span>4 140 просмотров</span></div><h3>Автоматическое регулирование подачи воды в башне</h3></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding-top:0">
+  <div class="wrap faq-wrap">
+    <div><span class="pill">FAQ</span><h2 style="font-size:40px;margin:14px 0 14px">Частые вопросы</h2><p style="color:var(--muted)">Не нашли ответ? Позвоните <a href="tel:+74991120131" style="color:var(--text);font-weight:700">+7 499 112-01-31</a> или напишите на <a href="mailto:info@sps-s.ru" style="color:var(--blue);font-weight:700">info@sps-s.ru</a></p></div>
+    <div class="faq">
+      <details class="f" open><summary>Сколько это стоит?</summary><p>У каждого проекта своя стоимость: она зависит от технической сложности, материалов и дополнительных услуг. С ведущими поставщиками действуют долгосрочные договорённости — закупаем по оптовым ценам. Весь комплекс работ выполняем сами, без посредников.</p></details>
+      <details class="f"><summary>Какой срок изготовления оборудования?</summary><p>После заявки специалисты составляют эскизную схему, перечень комплектующих и рассчитывают цену и сроки. Оговоренные сроки производства мы всегда соблюдаем.</p></details>
+      <details class="f"><summary>Предоставляете ли вы гарантию?</summary><p>Да, гарантия на изделия — 24 месяца со дня отгрузки.</p></details>
+      <details class="f"><summary>Работаете с физическими лицами?</summary><p>Да, работаем как с юридическими, так и с физическими лицами по всей России.</p></details>
+      <details class="f"><summary>С какими поставщиками работаете?</summary><p>Премиум-сегмент — ABB, Schneider Electric, Legrand. Средний и бюджетный — Техэнерго, ОВЕН, КЭАЗ, Контактор, IEK, TDM, EKF, Hyundai и др.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="s" style="padding:0">
+  <div class="wrap contact">
+    <div class="c-card">
+      <h2>Контакты</h2>
+      <a class="c-row" href="tel:+74991120131"><span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2457F5" stroke-width="1.8"><path d="M5 3h4l2 5-3 2a11 11 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg></span><div><small>Офис · Пн–Пт 9:00–18:00</small><b>+7 499 112-01-31</b></div></a>
+      <a class="c-row" href="tel:+79037408013"><span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2457F5" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span><div><small>Мобильный</small><b>+7 903 740-80-13</b></div></a>
+      <a class="c-row" href="mailto:info@sps-s.ru"><span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2457F5" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><div><small>Почта</small><b>info@sps-s.ru</b></div></a>
+      <div class="c-row"><span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2457F5" stroke-width="1.8"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></span><div><small>Адрес</small><b>Московская обл., Красногорск, мкр. Опалиха, ул. Горького, 3</b></div></div>
+    </div>
+    <div class="map"><iframe src="https://yandex.ru/map-widget/v1/?ll=37.245535%2C55.826154&amp;z=15&amp;pt=37.245535%2C55.826154%2Cpm2blm" title="Карта" loading="lazy"></iframe></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fg">
+      <div><a href="#" class="logo" style="color:var(--text)"><i><svg width="15" height="19" viewBox="0 0 18 22"><path d="M10 0 0 13h7l-2 9L18 8h-7l2-8z" fill="#fff"/></svg></i><span>Спецсистемсервис<small>Электрощиты с 2003 года</small></span></a><p style="margin-top:16px">Проектирование, сборка, монтаж и обслуживание электрощитового оборудования.</p></div>
+      <div><h5>Каталог</h5><ul><li><a href="#">Шкафы управления</a></li><li><a href="#">Силовые шкафы</a></li><li><a href="#">Преобразователи частоты</a></li><li><a href="#">Термошкафы</a></li><li><a href="#">Опросные листы</a></li></ul></div>
+      <div><h5>Услуги</h5><ul><li><a href="#">Проектирование</a></li><li><a href="#">Сборка шкафов</a></li><li><a href="#">Программирование</a></li><li><a href="#">Монтаж и ПНР</a></li><li><a href="#">Обслуживание</a></li></ul></div>
+      <div><h5>Компания</h5><ul><li><a href="#">О нас</a></li><li><a href="#">Объекты</a></li><li><a href="#">Отзывы</a></li><li><a href="#">Сертификаты</a></li><li><a href="#">Блог</a></li><li><a href="#">Контакты</a></li></ul></div>
+    </div>
+    <div class="fb"><span>© 2003–2026 ООО «Спецсистемсервис»</span><span><a href="#">Карта сайта</a> · <a href="#">Политика конфиденциальности</a></span></div>
+  </div>
+</footer>
+
+<div class="mbar"><a href="tel:+74991120131" aria-label="Позвонить"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121826" stroke-width="1.8"><path d="M5 3h4l2 5-3 2a11 11 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg></a><a href="#quiz">Рассчитать стоимость</a></div>
+<div class="lb" onclick="this.classList.remove('on')"><img alt=""></div>
+<script>
+const steps=[...document.querySelectorAll('#quiz .step')];let cur=1;
+function go(n){cur=n;steps.forEach(s=>s.classList.toggle('on',+s.dataset.s===n));
+  document.getElementById('qbar').style.width=Math.min(n,3)/3*100+'%';
+  document.getElementById('qlabel').textContent=n<4?'ШАГ '+n+' ИЗ 3':'ГОТОВО';}
+document.querySelectorAll('#quiz .opt').forEach(o=>o.addEventListener('click',()=>{
+  o.parentElement.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));o.classList.add('sel');setTimeout(()=>go(cur+1),220);}));
+document.querySelectorAll('.q-back').forEach(b=>b.addEventListener('click',()=>go(cur-1)));
+document.getElementById('qsend').addEventListener('click',()=>go(4));
+document.querySelectorAll('.ctab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.ctab').forEach(x=>x.classList.toggle('on',x===t));
+  document.querySelectorAll('.cpanel').forEach(p=>p.classList.toggle('on',p.dataset.p===t.dataset.t));}));
+document.querySelectorAll('[data-lb]').forEach(i=>i.addEventListener('click',e=>{e.preventDefault();const lb=document.querySelector('.lb');lb.querySelector('img').src=i.src;lb.classList.add('on')}));
+</script>
+</body>
+</html>

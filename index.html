@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Редизайн sps-s.ru</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Manrope,system-ui,sans-serif;background:#F3F4F6;color:#111827;line-height:1.55}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1160px;margin:0 auto;padding:56px 24px 80px}
+h1{font-size:40px;letter-spacing:-.03em;line-height:1.1}
+.sub{color:#6B7280;font-size:17px;margin-top:12px;max-width:760px}
+h2{font-size:22px;letter-spacing:-.02em;margin:52px 0 18px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px #E5E7EB;display:flex;flex-direction:column;transition:.2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 0 0 1px #E5E7EB,0 24px 40px -24px rgba(0,0,0,.3)}
+.thumb{height:170px;background-size:cover;background-position:center;position:relative}
+.thumb .sw{position:absolute;left:14px;bottom:14px;display:flex;gap:6px}
+.thumb .sw i{width:24px;height:24px;border-radius:50%;box-shadow:0 0 0 2px #fff}
+.body{padding:22px 22px 24px;flex:1;display:flex;flex-direction:column}
+.num{font-size:12.5px;font-weight:800;color:#6B7280;letter-spacing:.08em}
+.card h3{font-size:21px;margin:6px 0 10px;letter-spacing:-.02em}
+.card p{color:#4B5563;font-size:15px}
+.card ul{margin:14px 0 18px 18px;color:#4B5563;font-size:14.5px}
+.open{margin-top:auto;font-weight:700;color:#2457F5}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.box{background:#fff;border-radius:18px;padding:26px;box-shadow:0 0 0 1px #E5E7EB}
+.box h3{font-size:17px;margin-bottom:12px}
+.box li{margin:0 0 8px 18px;color:#374151;font-size:15px}
+@media(max-width:900px){.grid,.cols{grid-template-columns:1fr}h1{font-size:30px}.wrap{padding:36px 16px 60px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Редизайн главной страницы sps-s.ru</h1>
+  <p class="sub">Три концепции главной для многостраничного сайта ООО «Спецсистемсервис». Каждый вариант свёрстан и под десктоп, и под мобильные.</p>
+
+  <h2>Варианты</h2>
+  <div class="grid">
+    <a class="card" href="v1-engineering.html">
+      <div class="thumb" style="background-image:url(assets/s-1.jpg)"><div class="sw"><i style="background:#0F1B2D"></i><i style="background:#FFC21A"></i><i style="background:#F4F5F1"></i></div></div>
+      <div class="body"><span class="num">ВАРИАНТ 1</span><h3>Инженерный стандарт</h3><p>Светлый, строгий, «чертёжный». Говорит на языке проектировщиков и главных инженеров.</p>
+      <ul><li>Мега-меню каталога с фото категорий</li><li>Маркировка изделий ЩУВ / ВРУ / АВР</li><li>Отзывы с цитатами из писем</li></ul><span class="open">Открыть →</span></div>
+    </a>
+    <a class="card" href="v2-industrial.html">
+      <div class="thumb" style="background-image:linear-gradient(0deg,rgba(15,17,19,.6),rgba(15,17,19,.2)),url(assets/hero.jpg)"><div class="sw"><i style="background:#0F1113"></i><i style="background:#FF6B1A"></i><i style="background:#F2F2EF"></i></div></div>
+      <div class="body"><span class="num">ВАРИАНТ 2</span><h3>Производство</h3><p>Тёмный, мощный, с полноэкранным фото цеха. Подчёркивает собственное производство и масштаб.</p>
+      <ul><li>Каталог-плитки с фильтром по типам</li><li>Услуги — фото-карточки</li><li>Статусы IEK, EKF, Legrand, TDM в первом экране</li></ul><span class="open">Открыть →</span></div>
+    </a>
+    <a class="card" href="v3-service.html">
+      <div class="thumb" style="background:#F4F6FA url(assets/c-upr.jpg) center/contain no-repeat"><div class="sw"><i style="background:#2457F5"></i><i style="background:#121826"></i><i style="background:#16A36A"></i></div></div>
+      <div class="body"><span class="num">ВАРИАНТ 3</span><h3>Сервис и подбор</h3><p>Дружелюбный, «продуктовый». Кнопка «Каталог» как в интернет-магазине и квиз расчёта в первом экране.</p>
+      <ul><li>Квиз из 3 шагов с загрузкой схемы</li><li>Каталог во вкладках</li><li>Живая Яндекс.Карта в контактах</li></ul><span class="open">Открыть →</span></div>
+    </a>
+  </div>
+
+</div>
+</body>
+</html>
